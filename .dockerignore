@@ -1,0 +1,10 @@
+node_modules
+server/data
+server/dist
+web/dist
+web/node_modules
+.git
+.env
+.env.*
+!.env.example
+**/.DS_Store
