@@ -17,7 +17,9 @@ RUN npm ci --workspace server
 
 COPY server server/
 
-RUN npm run build --workspace server
+RUN npm run build --workspace server \
+  && mkdir -p server/dist/db \
+  && cp server/src/db/schema.sql server/dist/db/schema.sql
 
 ENV NODE_ENV=production
 ENV PORT=8787
