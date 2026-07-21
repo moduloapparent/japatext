@@ -1202,8 +1202,10 @@ fieldset legend {
     align-items: stretch;
     border-right: none;
     border-top: 1px solid var(--border);
-    padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px));
+    background: var(--panel);
+    padding: 4px 2px calc(4px + env(safe-area-inset-bottom, 0px));
     gap: 0;
+    z-index: 20;
   }
 
   .brand,
@@ -1223,35 +1225,55 @@ fieldset legend {
     flex-direction: column;
     justify-content: center;
     gap: 2px;
-    padding: 8px 4px;
-    font-size: 0.68rem;
+    padding: 6px 4px 4px;
+    font-size: 0.65rem;
     border-radius: var(--radius-sm);
   }
 
   .nav-icon {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     line-height: 1;
   }
 
+  .conversation-list,
+  .notes-page,
+  .settings-page {
+    padding-bottom: 8px;
+  }
+
   .list-header {
-    padding: 16px 16px 4px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--bg);
+    padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 8px;
   }
 
   .list-header h1 {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
   }
 
   .conversation-list ul {
-    padding: 4px 8px 24px;
+    padding: 0 8px 8px;
   }
 
   .conversation-row {
-    padding: 12px 10px;
+    padding: 14px 12px;
     gap: 12px;
+    min-height: 64px;
+  }
+
+  .avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 1.35rem;
   }
 
   .thread-header {
-    padding: 10px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: calc(8px + env(safe-area-inset-top, 0px)) 12px 10px;
     gap: 8px;
     flex-wrap: wrap;
   }
@@ -1281,8 +1303,9 @@ fieldset legend {
     margin: 0 12px 8px;
   }
 
+  /* Tab bar already clears the home indicator — don't double-pad compose. */
   .compose-bar {
-    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    padding: 10px 12px;
     gap: 8px;
     flex-wrap: wrap;
   }
@@ -1304,17 +1327,21 @@ fieldset legend {
   .study-drawer {
     width: 100%;
     max-width: 100vw;
-    padding: 18px 16px calc(40px + env(safe-area-inset-bottom, 0px));
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px));
   }
 
   .notes-page,
   .settings-page {
-    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: 8px;
   }
 
   .settings-section {
     padding: 16px;
     max-width: none;
+  }
+
+  .settings-section:first-child {
+    padding-top: calc(12px + env(safe-area-inset-top, 0px));
   }
 
   .usage-grid {
@@ -1351,7 +1378,9 @@ fieldset legend {
 
   .onboarding {
     padding: 16px;
+    padding-top: calc(16px + env(safe-area-inset-top, 0px));
     min-height: 100dvh;
+    align-items: flex-start;
   }
 
   .onboarding-card {
