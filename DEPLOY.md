@@ -81,21 +81,36 @@ Skip steps 4–5 for **personal deploy** (mode A).
 
 ---
 
-## 3. Deploy the web (Vercel)
+## 3. Deploy the web (Railway — same project)
 
-1. Import the repo in Vercel. Root directory: repo root (uses `vercel.json`).
+You already have `japatext-web` next to the API. Point it at the API:
 
-2. **Environment variables** (Production):
+1. Open **japatext-web** → **Settings** → **Build**
+   - **Dockerfile path:** `Dockerfile.web` (not the default `Dockerfile`)
+2. **Variables** on `japatext-web`:
 
    | Variable | Value |
    |----------|-------|
-   | `VITE_API_BASE_URL` | `https://YOUR-API.up.railway.app/api` |
-   | `VITE_SUPABASE_URL` | Supabase project URL (mode B only) |
-   | `VITE_SUPABASE_ANON_KEY` | publishable key (mode B only) |
+   | `VITE_API_BASE_URL` | `https://japatext-server-production.up.railway.app/api` |
 
-   Leave Supabase vars unset for mode A.
+   (Vite bakes this in at **build** time — after changing it, redeploy / rebuild.)
 
-3. Deploy. Open your Vercel URL.
+3. **Settings** → **Networking** → **Generate Domain** (port Railway suggests / `PORT` is fine).
+4. On **japatext-server** → **Variables**, set:
+
+   | Variable | Value |
+   |----------|-------|
+   | `WEB_ORIGIN` | `https://YOUR-WEB-DOMAIN.up.railway.app` |
+
+   Until that is set, CORS allows all origins (ok for first smoke test).
+
+5. Open the web domain — you should hit onboarding / the chat list.
+
+### Alternative: Vercel for web
+
+1. Import the repo in Vercel (root uses `vercel.json`).
+2. Set `VITE_API_BASE_URL` as above.
+3. Set `WEB_ORIGIN` on Railway to the Vercel URL.
 
 ---
 

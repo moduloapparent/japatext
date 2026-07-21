@@ -1,3 +1,5 @@
+# Used by japatext-server. For japatext-web, set Dockerfile path to Dockerfile.web
+# in Railway → Settings → Build.
 [build]
 builder = "dockerfile"
 dockerfilePath = "Dockerfile"
