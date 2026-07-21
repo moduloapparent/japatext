@@ -165,6 +165,48 @@ async function main() {
     seed(); // restore for any subsequent tests / manual inspection
   });
 
+  const { GOLDEN_REPLY_CASES, assertGoldenCase, assessPeerReplyShape } = await import(
+    "../engine/goldenReplies.js"
+  );
+  const { buildSystemPrompt } = await import("../engine/prompts.js");
+
+  await test("golden reply fixtures: good peer replies pass, helpful-assistant drift fails", () => {
+    assert(GOLDEN_REPLY_CASES.length >= 4, "expected at least Ren/Misaki fixture cases");
+    for (const caseItem of GOLDEN_REPLY_CASES) {
+      assertGoldenCase(caseItem);
+    }
+  });
+
+  await test("peer-shape heuristic rejects echo+menu mega-replies", () => {
+    const report = assessPeerReplyShape(
+      "ぺこぺこかw 飯行く？それとも家で簡単に済ませる？金ないなら安いラーメンとか勧めるけど、何食べたい感じ？"
+    );
+    assert(!report.ok, "classic Ren drift reply should fail");
+    assert(report.reasons.length > 0, "should explain why");
+  });
+
+  await test("Ren and Misaki system prompts lock anti-assistant / mixed-initiative rules", () => {
+    for (const id of ["ren", "misaki"] as const) {
+      const character = repo.getCharacter(id);
+      assert(Boolean(character), `character ${id} should be seeded`);
+      const prompt = buildSystemPrompt({
+        character: character!,
+        relationshipNotes: null,
+        familiarity: "acquaintance",
+        threads: [],
+        memories: [],
+        profile: undefined,
+        medium: "chat",
+        mode: "comprehensible",
+        targetStretchItems: 2,
+      });
+      assert(prompt.includes("アンチペルソナ"), `${id}: prompt should include anti-persona`);
+      assert(prompt.includes("mixed initiative") || prompt.includes("主導権"), `${id}: prompt should include mixed initiative`);
+      assert(prompt.includes("それとも"), `${id}: prompt should forbid A? それとも B? menus`);
+      assert(!/あなたはAI|I'm an AI|as an AI/i.test(prompt), `${id}: prompt should not break character with AI disclaimers`);
+    }
+  });
+
   console.log(`\nLogic tests: ${passed} passed, ${failed} failed`);
 
   // --- Tier 2: pipeline tests against a deterministic mock model --------------
