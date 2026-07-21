@@ -209,15 +209,24 @@ export function ThreadView({ medium }: { medium: "chat" | "email" }) {
   return (
     <div className="thread-view">
       <header className="thread-header">
-        <button className="back-btn" onClick={() => navigate(medium === "chat" ? "/chats" : "/mail")}>
-          ←
-        </button>
-        <div className="avatar">{character.avatarEmoji ?? "🙂"}</div>
-        <div className="thread-header-info">
-          <span className="thread-name">{character.name}</span>
-          <span className="thread-sub">{character.register}</span>
+        <div className="thread-header-top">
+          <button
+            type="button"
+            className="back-btn"
+            onClick={() => navigate(medium === "chat" ? "/chats" : "/mail")}
+            aria-label="戻る"
+          >
+            ←
+          </button>
+          <div className="avatar thread-avatar" aria-hidden>
+            {character.avatarEmoji ?? "🙂"}
+          </div>
+          <div className="thread-header-info">
+            <span className="thread-name">{character.name}</span>
+            <span className="thread-sub">{character.register}</span>
+          </div>
         </div>
-        <div className="mode-toggle" role="group" aria-label="返信の難しさ">
+        <div className="mode-toggle thread-mode" role="group" aria-label="返信の雰囲気">
           <button
             type="button"
             className={mode === "comprehensible" ? "active" : ""}
