@@ -25,6 +25,13 @@ export function ThreadView({ medium }: { medium: "chat" | "email" }) {
   const [typingPulseOn, setTypingPulseOn] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
   const [drawerMessage, setDrawerMessage] = useState<Message | null>(null);
+  const [studyHintVisible, setStudyHintVisible] = useState(() => {
+    try {
+      return localStorage.getItem("japatext.studyHintDismissed") !== "1";
+    } catch {
+      return true;
+    }
+  });
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const draftTimer = useRef<number | null>(null);
 
@@ -210,20 +217,24 @@ export function ThreadView({ medium }: { medium: "chat" | "email" }) {
           <span className="thread-name">{character.name}</span>
           <span className="thread-sub">{character.register}</span>
         </div>
-        <div className="mode-toggle">
+        <div className="mode-toggle" role="group" aria-label="返信の難しさ">
           <button
+            type="button"
             className={mode === "comprehensible" ? "active" : ""}
             onClick={() => handleModeToggle("comprehensible")}
-            title="自然な日本語のまま、新しい語彙・文法を抑える"
+            title="自然な日本語のまま、新しい言い回しを少し抑える"
+            aria-pressed={mode === "comprehensible"}
           >
-            N+1
+            ちょうどいい
           </button>
           <button
+            type="button"
             className={mode === "natural" ? "active" : ""}
             onClick={() => handleModeToggle("natural")}
-            title="制限なしの完全に自然な日本語"
+            title="制限なしの、そのままの日本語"
+            aria-pressed={mode === "natural"}
           >
-            Natural
+            そのまま
           </button>
         </div>
       </header>
@@ -233,7 +244,7 @@ export function ThreadView({ medium }: { medium: "chat" | "email" }) {
           <MessageItem key={m.id} message={m} medium={medium} onOpenDrawer={() => setDrawerMessage(m)} />
         ))}
         {showTyping && (
-          <div className="pending-row">
+          <div className="pending-row" aria-live="polite" aria-label="入力中">
             <span className="typing-indicator">
               <span />
               <span />
@@ -245,10 +256,31 @@ export function ThreadView({ medium }: { medium: "chat" | "email" }) {
       </div>
 
       {sendError && (
-        <div className="send-error">
+        <div className="send-error" role="alert">
           {sendError}
           <button className="retry-btn" onClick={handleRetryReply} disabled={waitingForReply}>
             再試行
+          </button>
+        </div>
+      )}
+
+      {studyHintVisible && messages.length > 0 && (
+        <div className="study-hint">
+          <span>メッセージをタップすると、意味や言い回しを確認できます</span>
+          <button
+            type="button"
+            className="study-hint-dismiss"
+            aria-label="ヒントを閉じる"
+            onClick={() => {
+              setStudyHintVisible(false);
+              try {
+                localStorage.setItem("japatext.studyHintDismissed", "1");
+              } catch {
+                /* ignore */
+              }
+            }}
+          >
+            ×
           </button>
         </div>
       )}
@@ -323,7 +355,19 @@ function MessageItem({
 
   return (
     <div className={`bubble-row ${message.sender}`}>
-      <div className="bubble" onClick={onOpenDrawer}>
+      <div
+        className="bubble"
+        onClick={onOpenDrawer}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onOpenDrawer();
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="このメッセージの意味を確認"
+      >
         {message.body}
       </div>
       <div className="bubble-meta">

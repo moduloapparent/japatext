@@ -106,7 +106,7 @@ export function StudyDrawer({ message, conversationId, onClose, onFeedbackGiven 
                         className={`token-save ${savedLemmas.has(t.lemma) ? "saved" : ""}`}
                         onClick={() => saveToken(t)}
                         disabled={savedLemmas.has(t.lemma)}
-                        title="Notesに保存"
+                        title="ノートに保存"
                       >
                         {savedLemmas.has(t.lemma) ? "✓" : "＋"}
                       </button>

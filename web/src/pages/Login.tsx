@@ -11,7 +11,7 @@ export function Login() {
       <div className="login-page">
         <div className="login-card">
           <h1>Japatext</h1>
-          <p>Auth is not configured for this build. Local mode does not require sign-in.</p>
+          <p>ログインの設定がありません。この環境ではそのまま使えます。</p>
         </div>
       </div>
     );

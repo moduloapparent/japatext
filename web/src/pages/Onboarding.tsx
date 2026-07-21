@@ -48,9 +48,9 @@ export function Onboarding() {
   return (
     <div className="onboarding">
       <div className="onboarding-card">
-        <h1>Japatextへようこそ</h1>
+        <h1>ようこそ</h1>
         <p className="onboarding-sub">
-          AIキャラクターとのチャット・メールを通して、自然な日本語に触れながら学べるアプリです。まずは少し教えてください。
+          友達や同僚とのメッセージやメールを通して、自然な日本語に触れるアプリです。まずは呼び方だけ教えてください。
         </p>
 
         {step === 0 && (
@@ -104,18 +104,18 @@ export function Onboarding() {
             <p>あなたのレベルは、目安として N3（中級）から開始します。実際の理解度に応じて自動で調整されます。</p>
 
             <fieldset>
-              <legend>デフォルトの難易度モード</legend>
+              <legend>デフォルトの返信の雰囲気</legend>
               <label className="radio-row">
                 <input
                   type="radio"
                   checked={defaultMode === "comprehensible"}
                   onChange={() => setDefaultMode("comprehensible")}
                 />
-                Comprehensible（N+1） — 自然な日本語のまま、新しい語彙・文法を抑えめに調整
+                ちょうどいい — 自然な日本語のまま、新しい言い回しを少し抑える
               </label>
               <label className="radio-row">
                 <input type="radio" checked={defaultMode === "natural"} onChange={() => setDefaultMode("natural")} />
-                Natural — 完全に自然な日本語、レベル調整なし
+                そのまま — 制限なしの、そのままの日本語
               </label>
             </fieldset>
 
@@ -131,7 +131,7 @@ export function Onboarding() {
                   checked={furiganaPref === "on_unknown"}
                   onChange={() => setFuriganaPref("on_unknown")}
                 />
-                未習の語のみ（Study drawerで確認）
+                まだ知らない語だけ（メッセージをタップして確認）
               </label>
             </fieldset>
 

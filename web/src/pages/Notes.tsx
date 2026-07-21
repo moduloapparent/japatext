@@ -45,7 +45,7 @@ export function Notes() {
   return (
     <div className="notes-page">
       <header className="list-header">
-        <h1>Notes</h1>
+        <h1>ノート</h1>
         <input className="notes-search" placeholder="検索…" value={query} onChange={(e) => setQuery(e.target.value)} />
       </header>
 

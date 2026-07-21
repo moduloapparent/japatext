@@ -38,7 +38,7 @@ export function Settings() {
   return (
     <div className="settings-page">
       <header className="list-header">
-        <h1>Settings</h1>
+        <h1>設定</h1>
       </header>
 
       <section className="settings-section">
@@ -50,19 +50,24 @@ export function Settings() {
       </section>
 
       <section className="settings-section">
-        <h2>デフォルトの難易度モード</h2>
-        <div className="mode-toggle">
+        <h2>デフォルトの返信の雰囲気</h2>
+        <div className="mode-toggle" role="group" aria-label="デフォルトの返信の雰囲気">
           <button
+            type="button"
             className={profile?.defaultMode === "comprehensible" ? "active" : ""}
             onClick={() => toggleDefaultMode("comprehensible")}
           >
-            Comprehensible (N+1)
+            ちょうどいい
           </button>
-          <button className={profile?.defaultMode === "natural" ? "active" : ""} onClick={() => toggleDefaultMode("natural")}>
-            Natural
+          <button
+            type="button"
+            className={profile?.defaultMode === "natural" ? "active" : ""}
+            onClick={() => toggleDefaultMode("natural")}
+          >
+            そのまま
           </button>
         </div>
-        <p className="settings-note">個別の会話ではチャット/メール画面右上のトグルでも切り替えられます。</p>
+        <p className="settings-note">会話中は画面右上のトグルでも切り替えられます。</p>
       </section>
 
       <section className="settings-section">

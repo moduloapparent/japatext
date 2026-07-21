@@ -309,25 +309,27 @@ textarea {
 
 .mode-toggle {
   display: flex;
-  background: var(--accent-soft);
+  background: transparent;
+  border: 1px solid var(--border);
   border-radius: 999px;
-  padding: 3px;
-  gap: 2px;
+  padding: 2px;
+  gap: 0;
 }
 
 .mode-toggle button {
   border: none;
   background: none;
-  padding: 6px 12px;
+  padding: 5px 10px;
   border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: 0.72rem;
+  font-weight: 500;
   color: var(--ink-soft);
+  letter-spacing: 0.01em;
 }
 
 .mode-toggle button.active {
-  background: var(--accent);
-  color: #fff;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
 }
 
 .thread-body {
@@ -366,6 +368,24 @@ textarea {
   white-space: pre-wrap;
   cursor: pointer;
   box-shadow: var(--shadow);
+  animation: bubble-in 0.22s ease-out;
+}
+
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble {
+    animation: none;
+  }
 }
 
 .bubble-row.user .bubble {
@@ -570,6 +590,36 @@ textarea {
 .send-btn:disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+.study-hint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 16px 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.study-hint-dismiss {
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  line-height: 1;
+  padding: 2px 4px;
+  flex-shrink: 0;
+}
+
+.list-loading {
+  padding: 8px 20px;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
 }
 
 /* ---------- Study drawer ---------- */

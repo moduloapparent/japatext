@@ -9,23 +9,35 @@ export function NavShell({ children, apiKeyConfigured }: { children: ReactNode; 
           <span className="brand-mark">言</span>
           <span className="brand-name">Japatext</span>
         </div>
-        <nav>
+        <nav aria-label="メインメニュー">
           <NavLink to="/chats" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
-            <span className="nav-icon">💬</span> チャット
+            <span className="nav-icon" aria-hidden>
+              💬
+            </span>
+            チャット
           </NavLink>
           <NavLink to="/mail" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
-            <span className="nav-icon">✉️</span> メール
+            <span className="nav-icon" aria-hidden>
+              ✉️
+            </span>
+            メール
           </NavLink>
           <NavLink to="/notes" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
-            <span className="nav-icon">📝</span> Notes
+            <span className="nav-icon" aria-hidden>
+              📝
+            </span>
+            ノート
           </NavLink>
           <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
-            <span className="nav-icon">⚙️</span> Settings
+            <span className="nav-icon" aria-hidden>
+              ⚙️
+            </span>
+            設定
           </NavLink>
         </nav>
         {!apiKeyConfigured && (
           <div className="nav-warning">
-            APIキー未設定です。<code>server/.env</code> に <code>OPENAI_API_KEY</code> を設定してください。
+            返信の準備ができていません。設定を確認してください。
           </div>
         )}
       </aside>

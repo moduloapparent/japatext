@@ -34,6 +34,7 @@ export function ConversationList({ medium }: { medium: "chat" | "email" }) {
       <header className="list-header">
         <h1>{medium === "chat" ? "チャット" : "メール"}</h1>
       </header>
+      {!conversations && <p className="list-loading">読み込み中…</p>}
       <ul>
         {(conversations ?? []).map((c) => (
           <li
@@ -41,7 +42,9 @@ export function ConversationList({ medium }: { medium: "chat" | "email" }) {
             className={`conversation-row ${c.unread > 0 ? "unread" : ""}`}
             onClick={() => navigate(`/${medium === "chat" ? "chats" : "mail"}/${c.characterId}`)}
           >
-            <div className="avatar">{c.avatarEmoji ?? "🙂"}</div>
+            <div className="avatar" aria-hidden>
+              {c.avatarEmoji ?? "🙂"}
+            </div>
             <div className="conversation-body">
               <div className="conversation-top">
                 <span className="conversation-name">{c.characterName}</span>
@@ -57,10 +60,20 @@ export function ConversationList({ medium }: { medium: "chat" | "email" }) {
                 )}
               </div>
             </div>
-            {c.unread > 0 && <span className="unread-badge">{c.unread}</span>}
+            {c.unread > 0 && (
+              <span className="unread-badge" aria-label={`未読 ${c.unread}件`}>
+                {c.unread}
+              </span>
+            )}
           </li>
         ))}
-        {conversations && conversations.length === 0 && <li className="empty-state">まだ会話がありません。</li>}
+        {conversations && conversations.length === 0 && (
+          <li className="empty-state">
+            {medium === "chat"
+              ? "まだ誰とも話していません。気になる人を選んで、ひとこと送ってみましょう。"
+              : "まだメールはありません。相手を選んで、最初の一通を書いてみましょう。"}
+          </li>
+        )}
       </ul>
     </div>
   );
