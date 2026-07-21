@@ -26,8 +26,9 @@
 | A11y | Mode buttons need clearer accessible names | Minor | titles + aria |
 | Heuristic H8 | API key warning exposes `server/.env` in nav | Minor | Soften / Japanese |
 
-## Decisions
+## Decisions (character / AXD)
 
-- Mode labels: 「ちょうどいい」 / 「そのまま」 (not N+1 / Natural in chrome).
-- Study hint: one-line, dismissible, localStorage.
-- Keep study-on-tap interaction; do not add inline translations.
+- Adopted from Owl-Listener/ai-design-skills: anti-persona, error/repair personality,
+  mixed-initiative turn ownership, silent frustration handling, positive short-reply examples,
+  identity-first system prompt structure (no "I'm an AI" in character voice).
+- Deferred: golden-response regression library, formal eval rubrics, per-character tone matrices.
