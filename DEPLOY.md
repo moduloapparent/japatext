@@ -34,10 +34,10 @@ Invited users share one database — keep the invite list tiny (usually just you
 ### 1. Supabase dashboard
 
 1. **Authentication → URL configuration**
-   - Site URL: `https://YOUR-APP.vercel.app`
+   - Site URL: `https://japatext-server.vercel.app`
    - Redirect URLs:
      - `http://localhost:5173/auth/callback`
-     - `https://YOUR-APP.vercel.app/auth/callback`
+     - `https://japatext-server.vercel.app/auth/callback`
 2. **Authentication → Providers → Email** — enable magic link / OTP.
 3. **SQL Editor** — run `supabase/invites_setup.sql` (replace `YOU@example.com`).
 4. **Project Settings → API** — copy Project URL, publishable (anon) key, and **service role** key.
@@ -50,7 +50,7 @@ Invited users share one database — keep the invite list tiny (usually just you
 | `SUPABASE_ANON_KEY` | publishable key |
 | `SUPABASE_SERVICE_ROLE_KEY` | service role key (secret) |
 | `JAPATEXT_SINGLE_TENANT_AUTH` | `1` |
-| `WEB_ORIGIN` | your Vercel origin |
+| `WEB_ORIGIN` | `https://japatext-server.vercel.app` |
 
 Redeploy the API after saving.
 
@@ -78,10 +78,10 @@ Redeploy the web app (Vite bakes env at build time).
 1. Open your project → **SQL Editor** → run `supabase/migrations/20260720120000_initial.sql`.
 
 2. **Authentication → URL configuration**
-   - Site URL: your Vercel URL (e.g. `https://japatext.vercel.app`)
+   - Site URL: `https://japatext-server.vercel.app`
    - Redirect URLs:
      - `http://localhost:5173/auth/callback` (dev)
-     - `https://japatext.vercel.app/auth/callback` (prod)
+     - `https://japatext-server.vercel.app/auth/callback` (prod)
 
 3. **Project Settings → API** — copy:
    - Project URL → `SUPABASE_URL` / `VITE_SUPABASE_URL`
@@ -119,7 +119,7 @@ Skip steps 4–5 for **personal deploy** (mode A).
    | `NODE_ENV` | `production` |
    | `OPENAI_API_KEY` | your key |
    | `JAPATEXT_DATA_DIR` | `/data` |
-   | `WEB_ORIGIN` | `https://your-app.vercel.app` |
+   | `WEB_ORIGIN` | `https://japatext-server.vercel.app` |
    | `PORT` | `8787` (Railway may override — that's fine) |
 
    Do **not** set `SUPABASE_URL` / `SUPABASE_ANON_KEY` for mode A.
