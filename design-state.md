@@ -20,7 +20,7 @@
 | Source | Finding | Severity | Action |
 |--------|---------|----------|--------|
 | Critic / H2 | English “Notes/Settings/N+1/Natural” break Japanese world | Major | Japanize |
-| Critic | Mode toggle looks like a LMS control in the chat header | Major | Soften labels + style |
+| Critic | Mode toggle looks like a LMS control in the chat header | Major | Japanize labels; keep filled accent toggle (user preferred over soft outline) |
 | Heuristic H6 | Tap-to-study is powerful but invisible | Major | Quiet hint under compose |
 | Heuristic H2 | Empty states / onboarding say “AI” / generic | Minor | Warmer copy |
 | A11y | Mode buttons need clearer accessible names | Minor | titles + aria |
