@@ -34,13 +34,30 @@ export function isPostgresEnabled(): boolean {
   return process.env.JAPATEXT_DATABASE === "postgres" && Boolean(SUPABASE_SERVICE_ROLE_KEY);
 }
 
+/**
+ * Invite-only auth on top of shared SQLite (abuse gate for a personal deploy).
+ * All invited users share one learner DB — use only with a tiny invite list.
+ * Set JAPATEXT_SINGLE_TENANT_AUTH=1 and SUPABASE_SERVICE_ROLE_KEY.
+ */
+export function isSingleTenantAuthAllowed(): boolean {
+  return process.env.JAPATEXT_SINGLE_TENANT_AUTH === "1";
+}
+
 export function assertProductionStorage(): void {
   if (NODE_ENV !== "production") return;
   if (!isAuthEnabled()) return;
   if (isPostgresEnabled()) return;
+  if (isSingleTenantAuthAllowed()) {
+    if (!SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error(
+        "Invite-only auth requires SUPABASE_SERVICE_ROLE_KEY (to check the invites table)."
+      );
+    }
+    return;
+  }
   throw new Error(
-    "Production auth requires JAPATEXT_DATABASE=postgres and SUPABASE_SERVICE_ROLE_KEY. " +
-      "SQLite is single-user only — leave Supabase env vars unset for a personal deploy."
+    "Production auth requires either JAPATEXT_DATABASE=postgres, or " +
+      "JAPATEXT_SINGLE_TENANT_AUTH=1 with SUPABASE_SERVICE_ROLE_KEY for invite-only SQLite."
   );
 }
 

@@ -38,9 +38,36 @@ export function getServiceSupabase(): SupabaseClient {
   return serviceClient;
 }
 
+async function isEmailInvited(email: string): Promise<boolean> {
+  if (!SUPABASE_SERVICE_ROLE_KEY) {
+    // Local/dev without service role: any valid Supabase user is allowed.
+    return true;
+  }
+  const normalized = email.trim().toLowerCase();
+  const { data, error } = await getServiceSupabase()
+    .from("invites")
+    .select("email")
+    .ilike("email", normalized)
+    .maybeSingle();
+  if (error) {
+    console.error("Invite lookup failed:", error.message);
+    return false;
+  }
+  if (!data) return false;
+
+  // Best-effort: stamp first successful login.
+  void getServiceSupabase()
+    .from("invites")
+    .update({ redeemed_at: new Date().toISOString() })
+    .ilike("email", normalized)
+    .is("redeemed_at", null);
+
+  return true;
+}
+
 /**
  * Local-dev: attach a synthetic user when auth is not configured.
- * Production/multi-user: require a valid Supabase JWT Bearer token.
+ * Production: require a valid Supabase JWT + invite row for the user's email.
  */
 export function authMiddleware(req: Request, res: Response, next: NextFunction): void {
   void (async () => {
@@ -72,8 +99,17 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction):
       res.status(401).json({ error: { message: "Invalid or expired session." } });
       return;
     }
+
+    const email = data.user.email ?? null;
+    if (!(await isEmailInvited(email ?? ""))) {
+      res.status(403).json({
+        error: { message: "This email is not invited. Ask the owner to add you." },
+      });
+      return;
+    }
+
     authed.userId = data.user.id;
-    authed.userEmail = data.user.email ?? null;
+    authed.userEmail = email;
     authed.user = data.user;
     next();
   })().catch(next);

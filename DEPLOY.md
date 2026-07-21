@@ -12,19 +12,68 @@ The API cannot run on Vercel serverless today — it uses long-lived SQLite, bac
 
 ## Two deploy modes
 
-### A. Personal deploy (available now)
+### A. Personal deploy (no login)
 
-Single-user production with SQLite on Railway. **Do not** set `SUPABASE_*` on the API server — auth stays off and all data lives in one SQLite file on a persistent volume.
+SQLite on Railway, open API. Fine for private testing only — anyone with the API URL can spend OpenAI credits.
 
-Good for: your own hosted copy with a real URL, no login wall.
+### B. Invite-only auth (recommended now)
 
-### B. Multi-user deploy (in progress)
+Magic-link login + invite list. Still SQLite (shared DB) — keep invites to yourself (and maybe one trusted person). See **Auth** below.
 
-Requires the Postgres repo layer (`JAPATEXT_DATABASE=postgres`) which is not wired yet. Until then, enabling Supabase auth on a production API will **fail at startup** by design — SQLite has no per-user isolation.
+### C. Multi-user Postgres (in progress)
+
+Per-user isolation via `JAPATEXT_DATABASE=postgres`. Not wired yet.
 
 ---
 
-## 1. Supabase setup
+## Auth (invite-only abuse gate)
+
+Japatext can require a Supabase magic-link login while still using SQLite.
+Invited users share one database — keep the invite list tiny (usually just you).
+
+### 1. Supabase dashboard
+
+1. **Authentication → URL configuration**
+   - Site URL: `https://YOUR-APP.vercel.app`
+   - Redirect URLs:
+     - `http://localhost:5173/auth/callback`
+     - `https://YOUR-APP.vercel.app/auth/callback`
+2. **Authentication → Providers → Email** — enable magic link / OTP.
+3. **SQL Editor** — run `supabase/invites_setup.sql` (replace `YOU@example.com`).
+4. **Project Settings → API** — copy Project URL, publishable (anon) key, and **service role** key.
+
+### 2. Railway (`japatext-server`) variables
+
+| Variable | Value |
+|----------|-------|
+| `SUPABASE_URL` | project URL |
+| `SUPABASE_ANON_KEY` | publishable key |
+| `SUPABASE_SERVICE_ROLE_KEY` | service role key (secret) |
+| `JAPATEXT_SINGLE_TENANT_AUTH` | `1` |
+| `WEB_ORIGIN` | your Vercel origin |
+
+Redeploy the API after saving.
+
+### 3. Vercel (web) variables
+
+| Variable | Value |
+|----------|-------|
+| `VITE_SUPABASE_URL` | same project URL |
+| `VITE_SUPABASE_ANON_KEY` | same publishable key |
+| `VITE_API_BASE_URL` | `https://japatext-server-production.up.railway.app/api` |
+
+Redeploy the web app (Vite bakes env at build time).
+
+### 4. Smoke test
+
+1. Open the Vercel URL → login screen.
+2. Request a magic link with an **invited** email → open link → app loads.
+3. Unauthenticated `curl` to `/api/characters` should return **401**.
+4. A non-invited email that somehow gets a session should get **403** from the API.
+
+---
+
+## 1. Supabase schema (full multi-user — later)
 
 1. Open your project → **SQL Editor** → run `supabase/migrations/20260720120000_initial.sql`.
 
